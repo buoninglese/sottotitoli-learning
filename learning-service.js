@@ -45,7 +45,6 @@ function loadBanks() {
   verbPatterns = loadJson('learning-resources/grammar/verbs-book/patterns.json');
 }
 
-// do it once at startup
 loadBanks();
 
 // ------------------------
@@ -63,7 +62,6 @@ for (const entry of spokenNgsl.entries || []) {
   const lemma = (entry.lemma || '').toLowerCase();
   if (!lemma) continue;
 
-  // Map lemma to itself
   if (!ngslLemmaByForm.has(lemma)) {
     ngslLemmaByForm.set(lemma, lemma);
   }
@@ -72,7 +70,6 @@ for (const entry of spokenNgsl.entries || []) {
     for (const form of entry.forms) {
       const f = (form || '').toLowerCase();
       if (!f) continue;
-      // Only set if not already set, to keep the first mapping
       if (!ngslLemmaByForm.has(f)) {
         ngslLemmaByForm.set(f, lemma);
       }
@@ -144,16 +141,15 @@ function tokenize(line) {
 
 /**
  * Analyze vocab usage in transcriptLines based on config.
- * Returns an object:
+ * Returns:
  * {
  *   items: [...],            // per-lemma items
  *   lexicalOverview: {...}   // counts by pos, bands, sources
  * }
  */
 function analyzeVocab(transcriptLines, config) {
-  const results = new Map(); // lemma -> stats
+  const results = new Map();
 
-  // accumulate overview counts
   const posCounts = { verb: 0, noun: 0, adj: 0, adv: 0, other: 0 };
   const bandCounts = {};
   const sourceCounts = { 'spoken-ngsl': 0, oxford3000: 0, longman3000: 0 };
@@ -166,7 +162,6 @@ function analyzeVocab(transcriptLines, config) {
       const ngslEntry = ngslByLemma.get(lemma);
       if (!ngslEntry) continue;
 
-      // Filter by frequency bands
       if (
         Array.isArray(config.vocab.frequencyBands) &&
         config.vocab.frequencyBands.length > 0 &&
@@ -184,7 +179,6 @@ function analyzeVocab(transcriptLines, config) {
           lemma,
           occurrences: 0,
           lines: [],
-          // meta
           level: oxEntry ? oxEntry.level || null : null,
           rank: ngslEntry.rank || null,
           sfi: ngslEntry.sfi || null,
@@ -231,13 +225,11 @@ function analyzeVocab(transcriptLines, config) {
     return a.lemma.localeCompare(b.lemma);
   });
 
-  // build lexical overview counts
   const seenNgsl = new Set();
   const seenOxford = new Set();
   const seenLongman = new Set();
 
   for (const item of arr) {
-    // pos
     const coarsePos = (item.pos || '').toLowerCase();
     if (coarsePos.startsWith('v')) posCounts.verb++;
     else if (coarsePos.startsWith('n')) posCounts.noun++;
@@ -245,11 +237,9 @@ function analyzeVocab(transcriptLines, config) {
     else if (coarsePos.startsWith('adv')) posCounts.adv++;
     else posCounts.other++;
 
-    // frequency band
     const band = item.frequencyBand || 'unknown';
     bandCounts[band] = (bandCounts[band] || 0) + 1;
 
-    // sources
     if (item.sources.includes('NGSL-Spoken-teaching')) {
       seenNgsl.add(item.lemma);
     }
@@ -282,14 +272,6 @@ function analyzeVocab(transcriptLines, config) {
 // 6. Grammar analysis implementation
 // --------------------------------
 
-/**
- * Very simple pattern-based grammar analysis.
- * Returns:
- * {
- *   items: [...],          // matched units/patterns
- *   overview: {...}        // CEFR counts (future extension)
- * }
- */
 function analyzeGrammar(transcriptLines, config) {
   const suggestions = [];
   const text = transcriptLines.join('\n').toLowerCase();
@@ -323,7 +305,6 @@ function analyzeGrammar(transcriptLines, config) {
 
   const items = suggestions.slice(0, config.grammar.maxItemsPerReport || 5);
 
-  // Placeholder overview: count by CEFR level if present in units.json/patterns.json
   const levelCounts = {};
   for (const item of items) {
     const level = item.level || 'unknown';
@@ -339,7 +320,7 @@ function analyzeGrammar(transcriptLines, config) {
 }
 
 // ---------------------------
-// 7. Simple metrics + summary
+// 7. Metrics + summary
 // ---------------------------
 
 function computeMetrics(transcriptLines) {
@@ -361,10 +342,6 @@ function computeMetrics(transcriptLines) {
   const totalWords = tokens.length;
   const totalChars = text.length;
 
-  // Duration is not known here; leave null (frontend has real duration).
-  const durationMinutes = null;
-
-  // Fillers (very rough)
   const fillers = ['uh', 'um', 'ehm', 'erm', 'you know', 'like'];
   const lower = text.toLowerCase();
   let fillersCount = 0;
@@ -377,7 +354,6 @@ function computeMetrics(transcriptLines) {
   const unique = new Set(tokens).size;
   const lexicalDiversity = totalWords > 0 ? unique / totalWords : null;
 
-  // Reuse your qualityScore idea: we can’t compute WPM here, so do a simple proxy
   let qualityScore = 50;
   if (lexicalDiversity !== null) {
     if (lexicalDiversity >= 0.45) qualityScore += 20;
@@ -391,7 +367,7 @@ function computeMetrics(transcriptLines) {
   return {
     totalWords,
     totalChars,
-    durationMinutes,
+    durationMinutes: null,
     wpm: null,
     fillersPerMinute: null,
     lexicalDiversity,
@@ -407,12 +383,16 @@ function buildSummary(transcriptLines, metrics, lexicalOverview, grammarResult) 
     return 'No speech was captured for this lesson.';
   }
 
-  const approxLevel = 'A2–B1'; // hard-coded for now
-  parts.push(`In this lesson you produced about ${metrics.totalWords} words of spoken English, with a vocabulary range consistent with ${approxLevel} learners.`);
+  const approxLevel = 'A2–B1';
+  parts.push(
+    `In this lesson you produced about ${metrics.totalWords} words of spoken English, with a vocabulary range consistent with ${approxLevel} learners.`
+  );
 
   const { posCounts } = lexicalOverview;
   if (posCounts.verb > 0 || posCounts.adj > 0) {
-    parts.push(`You used a good mix of verbs and describing words, including several useful action verbs.`);
+    parts.push(
+      'You used a good mix of verbs and describing words, including several useful action verbs.'
+    );
   }
 
   if (metrics.lexicalDiversity !== null) {
@@ -420,14 +400,20 @@ function buildSummary(transcriptLines, metrics, lexicalOverview, grammarResult) 
     if (ld >= 0.45) {
       parts.push('Your vocabulary was quite varied for the length of the session.');
     } else if (ld >= 0.3) {
-      parts.push('Your vocabulary had a reasonable amount of variety, with room to recycle and expand key words.');
+      parts.push(
+        'Your vocabulary had a reasonable amount of variety, with room to recycle and expand key words.'
+      );
     } else {
-      parts.push('You tended to repeat the same words; future lessons can focus on adding and recycling new vocabulary.');
+      parts.push(
+        'You tended to repeat the same words; future lessons can focus on adding and recycling new vocabulary.'
+      );
     }
   }
 
   if (grammarResult.items && grammarResult.items.length > 0) {
-    parts.push('You demonstrated some useful grammar patterns; these can be reused and expanded in future conversations.');
+    parts.push(
+      'You demonstrated some useful grammar patterns; these can be reused and expanded in future conversations.'
+    );
   }
 
   return parts.join(' ');
@@ -442,7 +428,9 @@ app.post('/lesson-report', (req, res) => {
     const { roomId, config: userConfig, transcriptLines } = req.body;
 
     if (!Array.isArray(transcriptLines)) {
-      return res.status(400).json({ error: 'transcriptLines must be an array of strings' });
+      return res
+        .status(400)
+        .json({ error: 'transcriptLines must be an array of strings' });
     }
 
     const config = mergeConfig(userConfig);
