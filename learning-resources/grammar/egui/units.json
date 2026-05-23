@@ -1,8 +1,8 @@
 {
   "meta": {
-    "source": "English Grammar in Use 5th",
+    "source": "English Grammar in Use 5th (inspired index, not a reproduction)",
     "language": "en",
-    "note": "Index of grammar units with rough CEFR levels."
+    "note": "Rough CEFR levels and learner-friendly descriptions for common units."
   },
   "units": [
     {
@@ -15,7 +15,235 @@
       "id": "EGIU-02",
       "title": "Present simple (I do)",
       "level": "A1",
-      "description": "Talking about routines and general truths."
+      "description": "Talking about routines, facts and general truths."
+    },
+    {
+      "id": "EGIU-03",
+      "title": "Present continuous and present simple 1",
+      "level": "A2",
+      "description": "Choosing between present continuous and present simple for now vs. habits."
+    },
+    {
+      "id": "EGIU-04",
+      "title": "Present continuous and present simple 2",
+      "level": "B1",
+      "description": "Verbs that are not normally used in continuous forms and other special cases."
+    },
+    {
+      "id": "EGIU-05",
+      "title": "Past simple (I did)",
+      "level": "A2",
+      "description": "Talking about finished actions and events in the past."
+    },
+    {
+      "id": "EGIU-06",
+      "title": "Present perfect 1 (I have done)",
+      "level": "B1",
+      "description": "Talking about life experiences and past actions with a result now."
+    },
+    {
+      "id": "EGIU-07",
+      "title": "Present perfect 2 (I have done vs. I did)",
+      "level": "B1",
+      "description": "Contrasting present perfect and past simple for time reference."
+    },
+    {
+      "id": "EGIU-08",
+      "title": "Present perfect continuous (I have been doing)",
+      "level": "B1",
+      "description": "Talking about activities that started in the past and continue or have an effect now."
+    },
+    {
+      "id": "EGIU-09",
+      "title": "Past continuous (I was doing)",
+      "level": "B1",
+      "description": "Talking about an activity in progress at a moment in the past."
+    },
+    {
+      "id": "EGIU-10",
+      "title": "Present perfect vs. present perfect continuous",
+      "level": "B1",
+      "description": "Differentiating finished results from ongoing activities."
+    },
+    {
+      "id": "EGIU-11",
+      "title": "Future forms 1 (will, going to)",
+      "level": "A2",
+      "description": "Using will and going to for decisions, predictions and plans."
+    },
+    {
+      "id": "EGIU-12",
+      "title": "Future forms 2 (present continuous, present simple)",
+      "level": "B1",
+      "description": "Talking about fixed arrangements and timetabled events in the future."
+    },
+    {
+      "id": "EGIU-13",
+      "title": "Used to (I used to do)",
+      "level": "B1",
+      "description": "Talking about past habits and states that are no longer true."
+    },
+    {
+      "id": "EGIU-14",
+      "title": "Questions and negatives in the present",
+      "level": "A1",
+      "description": "Forming basic questions and negatives in the present simple and present continuous."
+    },
+    {
+      "id": "EGIU-15",
+      "title": "Questions and negatives in the past",
+      "level": "A2",
+      "description": "Forming basic questions and negatives with did and was/were."
+    },
+    {
+      "id": "EGIU-16",
+      "title": "Articles 1 (a, an, the)",
+      "level": "A2",
+      "description": "Using a, an and the with countable nouns in easy situations."
+    },
+    {
+      "id": "EGIU-17",
+      "title": "Articles 2 (the, no article)",
+      "level": "B1",
+      "description": "Deciding when to use the or no article for general and specific reference."
+    },
+    {
+      "id": "EGIU-18",
+      "title": "Countable and uncountable nouns",
+      "level": "A2",
+      "description": "Using many, much, a few, a little and other quantity expressions."
+    },
+    {
+      "id": "EGIU-19",
+      "title": "Some and any",
+      "level": "A2",
+      "description": "Using some and any in positive sentences, negatives and questions."
+    },
+    {
+      "id": "EGIU-20",
+      "title": "Pronouns and possessives",
+      "level": "A1",
+      "description": "Using subject, object and possessive forms (I, me, my, mine, etc.)."
+    },
+    {
+      "id": "EGIU-21",
+      "title": "Comparatives and superlatives",
+      "level": "A2",
+      "description": "Comparing people and things with -er, more, the most, etc."
+    },
+    {
+      "id": "EGIU-22",
+      "title": "Too, enough and very",
+      "level": "B1",
+      "description": "Using too and enough to talk about degree and quantity."
+    },
+    {
+      "id": "EGIU-23",
+      "title": "Adverbs of frequency and manner",
+      "level": "A2",
+      "description": "Using adverbs like usually, often, quickly to describe habits and how actions happen."
+    },
+    {
+      "id": "EGIU-24",
+      "title": "Prepositions of time and place",
+      "level": "A2",
+      "description": "Using at, on, in and common prepositions with places and times."
+    },
+    {
+      "id": "EGIU-25",
+      "title": "Present real conditionals (if + present, will)",
+      "level": "B1",
+      "description": "Talking about possible future results of real conditions."
+    },
+    {
+      "id": "EGIU-26",
+      "title": "Zero conditional (if + present, present)",
+      "level": "B1",
+      "description": "Talking about general truths and things that are always or usually true."
+    },
+    {
+      "id": "EGIU-27",
+      "title": "Modal verbs 1 (can, could, be able to)",
+      "level": "A2",
+      "description": "Expressing ability, possibility and requests."
+    },
+    {
+      "id": "EGIU-28",
+      "title": "Modal verbs 2 (must, have to, should)",
+      "level": "B1",
+      "description": "Expressing obligation, rules, advice and recommendations."
+    },
+    {
+      "id": "EGIU-29",
+      "title": "Requests and offers (can, could, would, shall)",
+      "level": "B1",
+      "description": "Making polite offers, invitations and requests."
+    },
+    {
+      "id": "EGIU-30",
+      "title": "Gerunds and infinitives 1 (verb + -ing / to + verb)",
+      "level": "B1",
+      "description": "Using verb patterns like enjoy doing, want to do, hope to do."
+    },
+    {
+      "id": "EGIU-31",
+      "title": "Gerunds and infinitives 2 (like to do vs. like doing)",
+      "level": "B1",
+      "description": "Understanding meaning differences with -ing vs. to + verb after certain verbs."
+    },
+    {
+      "id": "EGIU-32",
+      "title": "Reported speech 1 (say, tell, ask)",
+      "level": "B1",
+      "description": "Reporting statements and questions in a simple way."
+    },
+    {
+      "id": "EGIU-33",
+      "title": "Relative clauses 1 (who, which, that)",
+      "level": "B1",
+      "description": "Adding information about a person or thing with relative pronouns."
+    },
+    {
+      "id": "EGIU-34",
+      "title": "Relative clauses 2 (whose, where, non-defining)",
+      "level": "B2",
+      "description": "Using more advanced relative clauses in longer sentences."
+    },
+    {
+      "id": "EGIU-35",
+      "title": "Passive voice 1 (present and past)",
+      "level": "B1",
+      "description": "Focusing on the object or result instead of the subject (is made, was built)."
+    },
+    {
+      "id": "EGIU-36",
+      "title": "Passive voice 2 (present perfect, modals)",
+      "level": "B2",
+      "description": "Using passive forms with have been and modal verbs."
+    },
+    {
+      "id": "EGIU-37",
+      "title": "Linking words (and, but, so, because)",
+      "level": "A2",
+      "description": "Connecting ideas in a simple way to explain reasons and results."
+    },
+    {
+      "id": "EGIU-38",
+      "title": "More linking expressions (although, however, in spite of)",
+      "level": "B2",
+      "description": "Contrasting ideas and making more complex connections between sentences."
+    },
+    {
+      "id": "EGIU-39",
+      "title": "Question tags (isn’t it?, don’t you?)",
+      "level": "B1",
+      "description": "Checking information and keeping conversation going with small questions at the end."
+    },
+    {
+      "id": "EGIU-40",
+      "title": "Ellipsis and short answers",
+      "level": "B1",
+      "description": "Giving natural short answers without repeating full sentences."
     }
   ]
 }
