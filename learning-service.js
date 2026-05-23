@@ -75,7 +75,7 @@ const ngslByLemma = new Map(
   (spokenNgsl.entries || []).map(e => [e.lemma.toLowerCase(), e])
 );
 
-// NEW: NGSL form -> lemma mapping using the forms array
+// NGSL: form -> lemma mapping using the forms array
 const ngslLemmaByForm = new Map();
 for (const entry of spokenNgsl.entries || []) {
   const lemma = (entry.lemma || '').toLowerCase();
@@ -176,9 +176,9 @@ function analyzeVocab(transcriptLines, config) {
   for (const [lineIndex, line] of transcriptLines.entries()) {
     const tokens = tokenize(line);
     for (const token of tokens) {
-      const form = token;
+      const form = token.toLowerCase();
       // Map form -> lemma using NGSL forms; fall back to the token itself
-      const lemma = (ngslLemmaByForm.get(form) || form).toLowerCase();
+      const lemma = (ngslLemmaByForm.get(form) || form);
       const ngslEntry = ngslByLemma.get(lemma);
       if (!ngslEntry) continue;
 
@@ -455,8 +455,8 @@ function trimOxfordResponse(apiJson) {
  * Returns:
  * {
  *   "word": "forget",
- *   "fromLocal": {...}    // your local vocab info if available
- *   "fromOxford": {...}   // trimmed Oxford response or null
+ *   "fromLocal": {...}
+ *   "fromOxford": {...}
  *   "rateLimited": false
  * }
  */
@@ -475,7 +475,7 @@ app.get('/dictionary/:word', async (req, res) => {
 
     // local info
     const local = {};
-    const lemma = (ngslLemmaByForm.get(word) || word).toLowerCase();
+    const lemma = (ngslLemmaByForm.get(word) || word);
 
     const ngslEntry = ngslByLemma.get(lemma);
     const oxEntry = oxByLemma.get(lemma);
