@@ -69,8 +69,12 @@ if (Array.isArray(spokenNgsl.entries)) {
   spokenNgsl.entries.forEach((e) => {
     const lemma = (e.lemma || "").toLowerCase();
     if (!lemma) return;
-    const pos = normalisePos(e.pos);
-    if (!pos) return;
+
+    // Allow entries with null pos, default to "other" for now
+    let pos = normalisePos(e.pos);
+    if (!pos) {
+      pos = "other";
+    }
 
     setPos(lemma, pos, 1);
 
