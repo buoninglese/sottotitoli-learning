@@ -549,6 +549,15 @@ app.get('/dictionary/:word', async (req, res) => {
   }
 });
 
+app.get('/debug/ngsl-forget', (req, res) => {
+  const entry = ngslByLemma.get('forget');
+  const mappedForgot = ngslLemmaByForm.get('forgot');
+  res.json({
+    hasForgetEntry: !!entry,
+    forms: entry ? entry.forms : null,
+    mappedForgot
+  });
+});
 // ---------------------
 // 9. Start the server
 // ---------------------
