@@ -2,7 +2,20 @@
   "meta": {
     "source": "English Grammar in Use 5th",
     "language": "en",
-    "note": "Placeholder, to be filled with grammar units index."
+    "note": "Index of grammar units with rough CEFR levels."
   },
-  "units": []
+  "units": [
+    {
+      "id": "EGIU-01",
+      "title": "Present continuous (I am doing)",
+      "level": "A2",
+      "description": "Talking about actions happening now or around now."
+    },
+    {
+      "id": "EGIU-02",
+      "title": "Present simple (I do)",
+      "level": "A1",
+      "description": "Talking about routines and general truths."
+    }
+  ]
 }
