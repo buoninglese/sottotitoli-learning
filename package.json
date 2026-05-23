@@ -1,0 +1,11 @@
+{
+  "name": "sottotitoli-learning",
+  "version": "1.0.0",
+  "main": "learning-service.js",
+  "scripts": {
+    "start": "node learning-service.js"
+  },
+  "dependencies": {
+    "express": "^4.19.0"
+  }
+}
