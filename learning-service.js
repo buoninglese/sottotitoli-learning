@@ -59,7 +59,7 @@ function loadBanks() {
   longmanComm = loadJson('learning-resources/vocab/longman-comm3000/core.json');
   oxford3000 = loadJson('learning-resources/vocab/oxford3000/core.json');
 
-  eguiUnits = loadJson('learning-resources/grammar/egiu/units.json');
+  eguiUnits = loadJson('learning-resources/grammar/egui/units.json');
   verbPatterns = loadJson('learning-resources/grammar/verbs-book/patterns.json');
 }
 
@@ -72,21 +72,41 @@ loadBanks();
 
 // NGSL: lemma -> entry
 const ngslByLemma = new Map(
-  spokenNgsl.entries.map(e => [e.lemma.toLowerCase(), e])
+  (spokenNgsl.entries || []).map(e => [e.lemma.toLowerCase(), e])
 );
+
+// NEW: NGSL form -> lemma mapping using the forms array
+const ngslLemmaByForm = new Map();
+for (const entry of spokenNgsl.entries || []) {
+  const lemma = (entry.lemma || '').toLowerCase();
+  if (!lemma) continue;
+
+  // Map lemma to itself
+  if (!ngslLemmaByForm.has(lemma)) {
+    ngslLemmaByForm.set(lemma, lemma);
+  }
+
+  if (Array.isArray(entry.forms)) {
+    for (const form of entry.forms) {
+      const f = (form || '').toLowerCase();
+      if (!f) continue;
+      // Only set if not already set, to keep the first mapping
+      if (!ngslLemmaByForm.has(f)) {
+        ngslLemmaByForm.set(f, lemma);
+      }
+    }
+  }
+}
 
 // Longman: lemma -> entry
 const longmanByLemma = new Map(
-  longmanComm.entries.map(e => [e.lemma.toLowerCase(), e])
+  (longmanComm.entries || []).map(e => [e.lemma.toLowerCase(), e])
 );
 
 // Oxford 3000: lemma -> entry
 const oxByLemma = new Map(
-  oxford3000.entries.map(e => [e.lemma.toLowerCase(), e])
+  (oxford3000.entries || []).map(e => [e.lemma.toLowerCase(), e])
 );
-
-// In a second phase you can add "form -> lemma" lookup here if you want.
-// For now we treat each token as a lemma, which works decently for many cases.
 
 // --------------------------
 // 4. RoomConfig defaults
@@ -105,7 +125,7 @@ const defaultRoomConfig = {
     includeExamples: false
   },
   grammar: {
-    sources: ['egiu', 'verbs-book'],
+    sources: ['egui', 'verbs-book'],
     maxItemsPerReport: 5
   },
   dictionary: {
@@ -156,8 +176,9 @@ function analyzeVocab(transcriptLines, config) {
   for (const [lineIndex, line] of transcriptLines.entries()) {
     const tokens = tokenize(line);
     for (const token of tokens) {
-      // For now use token as lemma
-      const lemma = token;
+      const form = token;
+      // Map form -> lemma using NGSL forms; fall back to the token itself
+      const lemma = (ngslLemmaByForm.get(form) || form).toLowerCase();
       const ngslEntry = ngslByLemma.get(lemma);
       if (!ngslEntry) continue;
 
@@ -246,14 +267,14 @@ function analyzeGrammar(transcriptLines, config) {
 
   // helpers to push unit/pattern if conditions met & enabled
   function addUnit(id) {
-    if (!config.grammar.sources.includes('egiu')) return;
-    const unit = eguiUnits.units.find(u => u.id === id);
-    if (unit) suggestions.push({ source: 'egiu', ...unit });
+    if (!config.grammar.sources.includes('egui')) return;
+    const unit = (eguiUnits.units || []).find(u => u.id === id);
+    if (unit) suggestions.push({ source: 'egui', ...unit });
   }
 
   function addPattern(id) {
     if (!config.grammar.sources.includes('verbs-book')) return;
-    const pattern = verbPatterns.patterns.find(p => p.id === id);
+    const pattern = (verbPatterns.patterns || []).find(p => p.id === id);
     if (pattern) suggestions.push({ source: 'verbs-book', ...pattern });
   }
 
@@ -274,8 +295,6 @@ function analyzeGrammar(transcriptLines, config) {
   if (toInfMatches >= 3) {
     addPattern('V-INF-TO');
   }
-
-  // You can add more heuristics here over time.
 
   // Limit suggestions
   return suggestions.slice(0, config.grammar.maxItemsPerReport || 5);
@@ -456,7 +475,7 @@ app.get('/dictionary/:word', async (req, res) => {
 
     // local info
     const local = {};
-    const lemma = word;
+    const lemma = (ngslLemmaByForm.get(word) || word).toLowerCase();
 
     const ngslEntry = ngslByLemma.get(lemma);
     const oxEntry = oxByLemma.get(lemma);
