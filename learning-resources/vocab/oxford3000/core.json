@@ -2,7 +2,7 @@
   "meta": {
     "source": "Oxford 3000",
     "language": "en",
-    "description": "Placeholder, to be filled with Oxford 3000 entries."
+    "description": "Core Oxford 3000 lemma list extracted from word file."
   },
   "entries": []
 }
