@@ -8,9 +8,16 @@
 
 const fs = require('fs');
 const path = require('path');
-const express = require('express');
+const express = require('express'); const cors = require('cors');
 
 const app = express();
+app.use(cors({
+  origin: (origin, cb) => {
+    const allowed = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!origin || allowed.includes(origin)) return cb(null, true);
+    return cb(new Error('CORS origin not allowed'));
+  }
+}));
 app.use(express.json({ limit: '1mb' }));
 
 // ----------------------
@@ -424,6 +431,9 @@ function buildSummary(transcriptLines, metrics, lexicalOverview, grammarResult) 
 // ---------------------------
 
 app.post('/lesson-report', (req, res) => {
+      if (process.env.INTERNAL_API_KEY && req.headers['x-api-key'] !== process.env.INTERNAL_API_KEY) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
   try {
     const { roomId, config: userConfig, transcriptLines } = req.body;
 
@@ -556,6 +566,9 @@ function trimOxfordResponse(apiJson) {
 }
 
 app.get('/dictionary/:word', async (req, res) => {
+      if (process.env.INTERNAL_API_KEY && req.headers['x-api-key'] !== process.env.INTERNAL_API_KEY) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
   try {
     const word = (req.params.word || '').toLowerCase().trim();
     if (!word) {
