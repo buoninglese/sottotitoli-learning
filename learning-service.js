@@ -443,6 +443,15 @@ app.post('/lesson-report', (req, res) => {
         .json({ error: 'transcriptLines must be an array of strings' });
     }
 
+    // Input length limits
+    if (transcriptLines.length > 500) {
+      return res.status(400).json({ error: 'Transcript exceeds maximum length (500 lines)' });
+    }
+    const totalChars = transcriptLines.reduce((sum, l) => sum + l.length, 0);
+    if (totalChars > 50000) {
+      return res.status(400).json({ error: 'Transcript exceeds maximum text length' });
+    }
+
     const config = mergeConfig(userConfig);
 
     const vocabResult = analyzeVocab(transcriptLines, config);
@@ -492,6 +501,10 @@ const oxfordRateState = {
 
 const DAILY_TOTAL_LIMIT = 500;
 const DAILY_PER_WORD_LIMIT = 50;
+
+// Simple in-memory dictionary cache
+const dictionaryCache = new Map();
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 function resetOxfordCountersIfNeeded() {
   const now = Date.now();
@@ -570,9 +583,16 @@ app.get('/dictionary/:word', async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
   try {
-    const word = (req.params.word || '').toLowerCase().trim();
+       const word = (req.params.word || '').toLowerCase().trim();
     if (!word) {
       return res.status(400).json({ error: 'Missing word' });
+    }
+
+    // Check cache
+    const cacheKey = word;
+    const cached = dictionaryCache.get(cacheKey);
+    if (cached && (Date.now() - cached.ts < CACHE_TTL_MS)) {
+      return res.json(cached.data);
     }
 
     const useOxfordParam = req.query.useOxford;
@@ -638,18 +658,23 @@ app.get('/dictionary/:word', async (req, res) => {
           fromOxford = trimOxfordResponse(data);
         } else if (resp.status === 404) {
           fromOxford = null;
-        } else {
-          console.error('Oxford API error:', resp.status, await resp.text());
+                } else {
+          console.error('Oxford API error:', resp.status);  // log server-side only
         }
       }
     }
 
-    res.json({
+    const responseData = {
       word,
       fromLocal: local,
       fromOxford,
       rateLimited
-    });
+    };
+
+    // Store in cache
+    dictionaryCache.set(cacheKey, { ts: Date.now(), data: responseData });
+
+    res.json(responseData);
   } catch (err) {
     console.error('Error in /dictionary/:word:', err);
     res.status(500).json({ error: 'Internal server error' });
